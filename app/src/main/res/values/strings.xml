@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TripsAssignment</string>
+    <string name="error_generic">Something went wrong.</string>
+    <string name="button_retry">Retry</string>
+    <string name="empty_no_trips">No trips to show.</string>
+    <string name="header_upcoming">Upcoming trips</string>
+    <string name="header_past">Past trips</string>
+</resources>
