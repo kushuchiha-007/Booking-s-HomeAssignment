@@ -24,7 +24,8 @@ class ChainsFragment:Fragment(){
     private val TAG = "ChainsFragment"
     // Use a simple ViewModelFactory to supply our ViewModel
     private val viewModel: ChainsViewModel by viewModels { ViewModelFactory() }
-    private lateinit var binding: TripsListScreenBinding
+    private var mBinding: TripsListScreenBinding? = null
+    private val binding get() = mBinding!!
     // Default mock user ID (can be swapped via proper UI in future)
     private val defaultUserId = 7984567
 
@@ -34,7 +35,7 @@ class ChainsFragment:Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = TripsListScreenBinding.inflate(inflater, container, false)
+        mBinding = TripsListScreenBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -44,6 +45,9 @@ class ChainsFragment:Fragment(){
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.retryButton.setOnClickListener { viewModel.loadChains(defaultUserId) }
 
+        // Needed this since flows are not lifecycle aware thus this ensures that collection happens only when
+        // fragment's view is not destroyed without this chances of mem leak occurs, livedata is lifecycle aware as in it
+        // is only triggered when when lifecycle is atleast started or resumed
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collectLatest { state ->
                 when(state) {
@@ -70,6 +74,9 @@ class ChainsFragment:Fragment(){
                             adapters += ChainAdapter(state.past)
                         }
                         recyclerView.adapter = ConcatAdapter(adapters)
+                        // optimizes scrolling performance since height and width of items in recycler view doesn't change
+                        // we can only use this bcz of above condition, recycler view skips layout recalculations due to this.
+                        recyclerView.setHasFixedSize(true)
                     }
                 }
             }
@@ -77,6 +84,12 @@ class ChainsFragment:Fragment(){
 
         // Kicking off the first load
         viewModel.loadChains(defaultUserId)
+    }
+
+    // Important to remove binding to avoid memory leak
+    override fun onDestroyView() {
+       mBinding = null
+        super.onDestroyView()
     }
 
     private fun showLoading() {
@@ -96,3 +109,6 @@ class ChainsFragment:Fragment(){
         binding.recyclerview.visibility = View.VISIBLE
     }
 }
+
+// If user wants to refresh data then we can wrap recycler view inside swiperefreshlayout and then
+// on its onclicklistener call viewmodel.loadchains(id)

@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import java.lang.Exception
 
+//Used this instead of IO exception or Runtime to provide more context on what went wrong. As we scale this might be imp
 class NetworkError : Exception {
     constructor() : super()
     constructor(message: String?) : super(message)

@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.booking.tripsassignment.ui.ChainsViewModel
 /**
- * Simple factory binding our ChainsViewModel so it can be created by the framework.
- * Add additional ViewModel types here as needed.
+ * We need this factory so as to pass arguments to our viewModel, the generic viewModel() wont allow any arguments and
+ * directly accessing ViewModel will behave like an obj and wont actually retain through changes in screen orientation
+ * Used this instead of DI since its a simple assignment and didn't need to configure it with hilt
  */
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory : ViewModelProvider.Factory {

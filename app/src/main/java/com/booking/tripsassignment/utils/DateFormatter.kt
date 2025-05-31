@@ -5,7 +5,8 @@ import org.joda.time.format.DateTimeFormat
 
 /*
  * Utility to format LocalDate instances into human-readable strings.
- * Uses Joda-Time for compatibility across API levels as suggested in web(wont matter if use Java.time as well).
+ * Uses Joda-Time for compatibility across API levels(API 26 and below but minSDK is 23)
+ *  as suggested in web(wont matter if use Java.time as well).
  */
 object DateFormatter {
     private const val PATTERN = "MMM dd,yyyy"

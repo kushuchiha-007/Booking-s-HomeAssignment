@@ -40,6 +40,14 @@ object ImageLoader {
             // if previous fails, Glide will fall back to this one
             chain = chain?.error(req) ?: req
         }
+        /* On the first iteration, chain is null, so chain = req1.
+        On the second iteration, chain = req1.error(req2). Now Glide will:
+        Try to load req1 (URL1) with FALLBACK_OPTIONS.
+        If it succeeds, display it and stop.
+        If it fails (e.g., 404, network error), automatically run req2 (URL2).
+        On the third iteration, chain = (req1.error(req2)).error(req3). So if both URL1 & URL2 fail, attempt URL3.
+         */
+
 
         // final safety: if _all_ fail, show our placeholder
         chain?.error(R.drawable.hotel_placeholder)?.into(view)

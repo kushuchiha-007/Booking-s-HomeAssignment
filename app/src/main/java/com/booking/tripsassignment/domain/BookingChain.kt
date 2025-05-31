@@ -9,6 +9,10 @@ import org.joda.time.LocalDate
  * @property endDate Date of last check-out.
  * @property bookingCount Number of bookings in this chain.
  * @property imageUrl The URL to display for this trip (first booking's image).
+ *
+ *
+ * We use data class over regular class cuz it handles logic like equals(), toString(), copy() etc by itself
+ * Ideal for immutable data containers
  */
 data class BookingChain(
     val cities: List<String>,

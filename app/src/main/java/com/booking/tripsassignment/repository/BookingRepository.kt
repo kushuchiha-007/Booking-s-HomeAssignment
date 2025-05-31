@@ -32,7 +32,10 @@ class MockNetworkBookingRepository : BookingRepository {
             throw RuntimeException("fetchBookings called on main thread!")
         }
 
+        // simulates latency as if it were a real network call
         Thread.sleep(Random.nextInt(10, 2000).toLong())
+
+        // Randomly fail 10 % of the time
         if (Random.nextInt(0, 21) % 10 == 0) {
             return Result.Error(NetworkError("API call error"))
         }

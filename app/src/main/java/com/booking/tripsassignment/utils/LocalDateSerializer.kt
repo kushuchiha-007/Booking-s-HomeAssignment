@@ -15,6 +15,16 @@ import java.lang.reflect.Type
 /**
  * Gson serializer to help serialize [LocalDate] instances.
  * We have provided this utility so that you can use it if you need it.
+ *
+ * Gson does not know how to natively serialize or deserialize LocalDate.
+ * Without this, you’d get an exception at runtime. The adapter ensures LocalDate fields appear as ISO date strings in JSON.
+ *
+ * It could be used like this
+ * val gson = GsonBuilder()
+ *     .registerTypeAdapter(LocalDate::class.java, LocalDateSerializer)
+ *     .create() then build in Retrofit Instance
+ *
+ *     .addConverterFactory(GsonConverterFactory.create(gson))
  */
 class LocalDateSerializer : JsonDeserializer<LocalDate?>,
     JsonSerializer<LocalDate?> {
