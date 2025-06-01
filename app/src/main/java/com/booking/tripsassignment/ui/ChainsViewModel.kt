@@ -6,6 +6,7 @@ import com.booking.tripsassignment.domain.ChainCalculator
 import com.booking.tripsassignment.repository.BookingRepository
 import com.booking.tripsassignment.repository.MockNetworkBookingRepository
 import com.booking.tripsassignment.utils.Result
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,9 @@ import org.joda.time.LocalDate
  */
 class ChainsViewModel(
     private val repo:BookingRepository = MockNetworkBookingRepository(),
-    private val calculator: ChainCalculator = ChainCalculator()
+    private val calculator: ChainCalculator = ChainCalculator(),
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+
 ): ViewModel() {
 
     private val _state = MutableStateFlow<UiState>(UiState.Loading)
@@ -31,7 +34,7 @@ class ChainsViewModel(
 
         viewModelScope.launch {
             // Fetch on IO dispatcher as main thread wont return bookings from Repository
-            val result = withContext(Dispatchers.IO) {
+            val result = withContext(ioDispatcher) {
                 repo.fetchBookings(userId)
             }
 
