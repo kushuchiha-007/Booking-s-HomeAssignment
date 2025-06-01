@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.booking.tripsassignment.databinding.TripsListScreenBinding
 import com.booking.tripsassignment.di.ViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
@@ -66,12 +67,16 @@ class ChainsFragment:Fragment(){
                         if(state.upcoming.isNotEmpty()) {
                             Log.i(TAG,"Future Data is present")
                             adapters += SectionHeaderAdapter("Upcoming Trips")
-                            adapters += ChainAdapter(state.upcoming)
+                            val chainAdapter = ChainAdapter()
+                            chainAdapter.submitList(state.upcoming)
+                            adapters += chainAdapter
                         }
                          if(state.past.isNotEmpty()) {
                             Log.i(TAG,"Past Data is present")
                             adapters += SectionHeaderAdapter("Past Trips")
-                            adapters += ChainAdapter(state.past)
+                             val chainAdapter = ChainAdapter()
+                             chainAdapter.submitList(state.past)
+                             adapters += chainAdapter
                         }
                         recyclerView.adapter = ConcatAdapter(adapters)
                         // optimizes scrolling performance since height and width of items in recycler view doesn't change

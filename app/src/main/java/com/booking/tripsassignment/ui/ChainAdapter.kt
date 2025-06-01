@@ -3,6 +3,8 @@ package com.booking.tripsassignment.ui
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.booking.tripsassignment.databinding.TripCardItemLayoutBinding
 import com.booking.tripsassignment.domain.BookingChain
@@ -13,9 +15,20 @@ import com.booking.tripsassignment.utils.ImageLoader
  * RecyclerView.Adapter to display a list of [BookingChain] items.
  * Each chain shows the cities, date range, booking count, and an image.
  */
-class ChainAdapter(
-    private val items:List<BookingChain>
-): RecyclerView.Adapter<ChainAdapter.ViewHolder>() {
+class ChainAdapter: ListAdapter<BookingChain,ChainAdapter.ViewHolder>(DiffCallBack()) {
+
+     class DiffCallBack:DiffUtil.ItemCallback<BookingChain>() {
+        override fun areItemsTheSame(oldItem: BookingChain, newItem: BookingChain): Boolean {
+            // need to compare any unique_identifier that we have of this Chain, since there's none
+            // comparing two of the attributes in which i feel duplicacy wont be there
+            return oldItem.cities == newItem.cities && oldItem.startDate == newItem.startDate
+        }
+
+        override fun areContentsTheSame(oldItem: BookingChain, newItem: BookingChain): Boolean {
+            return oldItem == newItem
+        }
+
+    }
 
     inner class ViewHolder(private val binding: TripCardItemLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chain: BookingChain) {
@@ -39,11 +52,7 @@ class ChainAdapter(
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(getItem(position))
     }
 }
